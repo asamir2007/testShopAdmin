@@ -1,0 +1,85 @@
+IDUShopProduct //InterfaceDataUnit
+DUShopProduct implements IDUShopProduct, IDUPrice, IDUDICommonItem, IDUDBItem, IDUShopProductBase
+
+IDUPrice
+	get_price():int
+
+IDUDBItem//DataBaseItem
+	get_idItem():int
+	
+IDUShopProductBase
+	get_shopId():int
+
+IDUDICommonItem //common DisplayInfo for shop item
+	get_title():string
+	get_description():string
+	
+DLShopProducts //data loader
+	loadListFromDB(?):[IDUShopProduct]
+
+	
+INCDatabase//network connector 4 database
+	connect()//:bool
+	disconnect():bool
+	query()//:* if result == null then error occoured
+	get_queryOpResultCode()//:int 0 means no error
+	get_queryOpDBErrorDetails()//:string	
+	
+NCDBMySQL//network connector 4 MySQL database
+	new($dbHost, $dbName, $userName, $userPassword)
+	
+
+NCDBMySQL//network connector 4 data base
+	
+
+IDPShopProductDB
+	constructProduct_DBQResult(a):IDUShopProduct
+	
+IDPShopProductDBMySQL_5_7 extends IDPShopProductDB
+	
+	
+IDPShopProductHTTP
+	constructProduct_JSON(a):IDUShopProduct
+
+DPShopProduct implements IDPShopProductDB, IDPShopProductHTTP
+	
+	
+MShopProducts
+	getItems(sizePage, idElement)
+	removeItem(id)
+	addItem(IDUShopProduct)
+	updateItem(IDUShopProduct)
+	itemPresent(id)
+	getCountItemsCat(idCat)
+	getCountItemsAll()
+
+MShopAdmin
+	getDUStats4Products():IDUActionResult
+	getDUProductsListSegment():IDUActionResult
+	startOperation():IDUActionResult
+
+MReqIn
+	processReq()
+
+	
+// DEBUG & SYSTEM //
+
+IDUAORI //data unit - agent: operation result info
+	logOR(aN, aID, layer, type, code);//log current operation result
+	get_dataResult():*//any object
+	c(a):int //get_CODE(a)//a - ierarchy level / step number
+	l(a):int //get_LAYER
+	t(a):int //get_TYPE
+	an(a):string //get_AGENT_NAME //agent name
+	ai(a):int //get_AGENT_ID //agent id (valid within single project only)
+	
+DUAORI
+	ID_L_DP //layer: data processing
+	ID_L_DS //data storage related
+	ID_L_NET //network related
+	ID_L_ACCESS //access policy related
+	ID_T_ENV //type: agent environment related (wrong system state)
+	ID_T_OPT //operation task description related (wrong arguments or wrong DU suplied)
+	ID_T_OP //operation business logic
+	ID_C_S //code: success
+	ID_C_F
